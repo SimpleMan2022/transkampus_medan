@@ -245,9 +245,9 @@ export default function MapSidebar({
       setLoadingCampusRoutes(true)
       const data = await findNearestRoutesToCampus(campusForRoutes as number)
       setNearestRoutes(data.routes || [])
-
+      console.log("Nearest Routes:", data.routes)
       if (data.routes.length > 0) {
-        toast.success(`Rute Terdekat dari ${data.campus.nama}`, {
+        toast.success(`Rute Terdekat dari ${data.routes.nama}`, {
           description: `Ditemukan ${data.routes.length} rute terdekat dari kampus ini.`,
         })
       } else {
@@ -434,103 +434,6 @@ export default function MapSidebar({
         <TabsContent value="features" className="p-0">
           <CardContent className="p-4">
             <Accordion type="single" collapsible defaultValue="route-finder">
-              <AccordionItem value="route-finder">
-                <AccordionTrigger className="flex items-center">
-                  <div className="flex items-center">
-                    <Route className="h-4 w-4 mr-2" />
-                    <span>Pencarian Rute</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-3 mt-2">
-                    <div>
-                      <p className="text-sm font-medium mb-1">Lokasi Awal:</p>
-                      {startLocation ? (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">
-                            {startLocation[0].toFixed(5)}, {startLocation[1].toFixed(5)}
-                          </span>
-                          <Button variant="ghost" size="sm" onClick={handleResetLocation} className="h-7 px-2">
-                            Reset
-                          </Button>
-                        </div>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full"
-                          onClick={onStartLocationSelection}
-                          disabled={isSelectingLocation}
-                        >
-                          <MapPin className="h-4 w-4 mr-2" />
-                          {isSelectingLocation ? "Klik pada peta..." : "Pilih di peta"}
-                        </Button>
-                      )}
-                    </div>
-
-                    <div>
-                      <p className="text-sm font-medium mb-1">Kampus Tujuan:</p>
-                      <select
-                        className="w-full p-2 border rounded-md text-sm"
-                        value={selectedCampus || ""}
-                        onChange={(e) => onCampusSelect && onCampusSelect(Number(e.target.value) || null)}
-                      >
-                        <option value="">Pilih kampus...</option>
-                        {campuses.map((campus) => (
-                          <option key={campus.id} value={campus.id}>
-                            {campus.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1" onClick={handleResetLocation}>
-                        Reset
-                      </Button>
-                      <Button
-                        variant="default"
-                        size="sm"
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                        disabled={!startLocation || !selectedCampus || loadingRoute}
-                        onClick={handleFindRoute}
-                      >
-                        {loadingRoute ? "Mencari..." : "Cari Rute"}
-                      </Button>
-                    </div>
-
-                    {calculatedRoute && (
-                      <div className="mt-4 pt-4 border-t">
-                        <h4 className="text-sm font-medium mb-2">Rute Ditemukan:</h4>
-                        <div className="bg-emerald-50 p-3 rounded-md">
-                          <p className="font-medium text-sm">Menuju {calculatedRoute.campusName}</p>
-                          <div className="mt-2 space-y-2">
-                            {calculatedRoute.segments.map((segment, idx) => (
-                              <div key={idx} className="text-xs bg-white p-2 rounded border border-emerald-100">
-                                <div className="flex items-center">
-                                  <div
-                                    className="w-3 h-3 rounded-full mr-2"
-                                    style={{ backgroundColor: segment.color }}
-                                  ></div>
-                                  <p className="font-medium">{segment.name}</p>
-                                </div>
-                                <div className="grid grid-cols-2 gap-1 mt-1">
-                                  <p>Jarak: {segment.distance.toFixed(2)} km</p>
-                                  <p>Waktu: {Math.round(segment.duration)} menit</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="mt-3 text-xs font-medium">
-                            <p>Total Jarak: {calculatedRoute.totalDistance.toFixed(2)} km</p>
-                            <p>Estimasi Waktu: {Math.round(calculatedRoute.totalDuration)} menit</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
 
               {/* Add new accordion item for campus routes */}
               <AccordionItem value="campus-routes">
